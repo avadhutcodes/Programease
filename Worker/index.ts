@@ -6,7 +6,7 @@ client.connect()
     while(1){
         const response = await client.rPop("problems");
         if(!response){
-            await new Promise(resolve => {
+            await new Promise<void>(resolve => {
                 setTimeout(resolve,1000);  
             })
             continue;
@@ -15,14 +15,16 @@ client.connect()
         const code = parsedResponse.code;
         const language = parsedResponse.language;
 
-        if(language === "c++"){
+        if(language === "cpp"){
             console.log("running user's c++ code");
             await new Promise(resolve => setTimeout(resolve,5000));  
         }
 
         if(language === "js"){
             console.log("running user's js code");
-            await new Promise(resolve => setTimeout(resolve,3000));  
+            //spwan a node process 
+            //store output to database
+            //update the status 
         }
 
         if(language === "python"){
