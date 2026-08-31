@@ -1,4 +1,6 @@
 import {createClient} from "redis";
+import { spawn } from 'node:child_process';
+import fs from "fs";
 
 const client = createClient();
 client.connect()
@@ -17,7 +19,19 @@ client.connect()
 
         if(language === "cpp"){
             console.log("running user's c++ code");
-            await new Promise(resolve => setTimeout(resolve,5000));  
+            const filepath = __dirname + "/code/userscode.cpp";
+            fs.writeFileSync(filepath,code);
+            spawn("g++", [filepath, "-o", "./code/output"]);
+            await  new Promise<void>(resolve => setTimeout(() => {
+                resolve();    
+            }, 10000));
+            const response = spawn("./code/output");
+            response.stdout.on("data",(chunk) => {
+                console.log(chunk.toString());
+            })
+
+
+             
         }
 
         if(language === "js"){
@@ -25,11 +39,26 @@ client.connect()
             //spwan a node process 
             //store output to database
             //update the status 
+            const filepath = __dirname + "/code/userscode.js";
+            fs.writeFileSync(filepath,code);
+            const output = spawn("node",[filepath]);
+            output.stdout.on("data",(chunk) => {
+                console.log(chunk.toString());
+            })
+
+
         }
 
-        if(language === "python"){
+        if(language === "python3"){
             console.log("running user's python code");
-            await new Promise(resolve => setTimeout(resolve,5000));  
+            const filepath = __dirname + "/code/userscode.py";
+            fs.writeFileSync(filepath,code);
+            const output = spawn("python3",[filepath]);
+            output.stdout.on("data",(chunk) => {
+                console.log(chunk.toString());
+            })
+
+
         }
 
 
