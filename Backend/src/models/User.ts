@@ -1,6 +1,6 @@
 import mongoose, {Schema, Document} from "mongoose";
 
-enum codestatus {
+ export  enum codestatus {
     processing = "processing",
     completed = "completed"
 }
@@ -15,6 +15,7 @@ interface User extends Document {
     code: string;
     status: codestatus;
     language: languageoptions;
+    Result: string;
 }
 
 const userSchema = new Schema<User> ({
@@ -33,6 +34,11 @@ const userSchema = new Schema<User> ({
         type: String,
         enum: Object.values(languageoptions),
         required: true
+    },
+
+    Result: {
+        type: String,
+        required: false 
     }
     
 })
