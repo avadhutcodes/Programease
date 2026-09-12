@@ -1,6 +1,8 @@
 import {createClient} from "redis";
 import { spawn } from 'node:child_process';
 import fs from "fs";
+import path from "path";
+import User from "../Backend/src/models/User";
 
 const client = createClient();
 client.connect()
@@ -16,6 +18,7 @@ client.connect()
         const parsedResponse = JSON.parse(response);
         const code = parsedResponse.code;
         const language = parsedResponse.language;
+        const _id = parsedResponse._id;
 
         if(language === "cpp"){
             console.log("running user's c++ code");
@@ -24,7 +27,7 @@ client.connect()
             spawn("g++", [filepath, "-o", "./code/output"]);
             await  new Promise<void>(resolve => setTimeout(() => {
                 resolve();    
-            }, 10000));
+            }, 5000));
             const response = spawn("./code/output");
             response.stdout.on("data",(chunk) => {
                 console.log(chunk.toString());
@@ -39,12 +42,36 @@ client.connect()
             //spwan a node process 
             //store output to database
             //update the status 
-            const filepath = __dirname + "/code/userscode.js";
+            const filepath =path.join( __dirname + "/code/userscode.js");
             fs.writeFileSync(filepath,code);
             const output = spawn("node",[filepath]);
-            output.stdout.on("data",(chunk) => {
-                console.log(chunk.toString());
-            })
+            
+            let stdoutData = '';
+            let stderrData = '';
+
+            output.stdout.on('data', (chunk) => {
+                 stdoutData += chunk.toString();
+              });
+
+            output.stderr.on('data', (chunk) => {
+               stderrData += chunk.toString();
+              });
+            
+              let parinam = '';
+              if(stdoutData == ''){
+                parinam = stderrData;
+              }
+
+              if(stderrData == ''){
+                parinam = stdoutData;
+              }
+
+            await User.findByIdAndUpdate(
+                _id,
+                {Result : parinam},
+                {new : true}
+
+            );
 
 
         }
