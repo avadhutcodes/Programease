@@ -8,7 +8,7 @@ import mongoose, {Schema, Document} from "mongoose";
 enum languageoptions {
     cpp = "cpp",
     javascript = "javascript",
-    python = "python"
+    python = "python3"
 }
 
 interface User extends Document {
