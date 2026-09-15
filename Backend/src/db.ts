@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import "dotenv/config";
 
-const connectDB = async (): Promise<void> => {
+const connectDB = async() : Promise<void> => {
   const mongoURI = process.env.MONGO_URI;
 
   if (!mongoURI) {
@@ -11,6 +11,7 @@ const connectDB = async (): Promise<void> => {
   try{
      await mongoose.connect(mongoURI);
     console.log("MongoDB connected successfully");
+   
   }
     
    catch (error) {

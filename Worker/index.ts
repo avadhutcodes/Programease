@@ -6,26 +6,23 @@ import User from "../Backend/src/models/User";
 import connectDB from "../Backend/src/db"
 import {codestatus} from "../Backend/src/models/User";
 
-
-const client = createClient();
+connectDB()
+.then(() =>{
+    const client = createClient();
 client.connect()
   .then(async() => {
     while(1){
 
-        await connectDB();
+        
         const response = await client.rPop("problems");
        
         if(!response){
-             console.log("queue is empty");
+            
             await new Promise<void>(resolve => {
-                setTimeout(resolve,3000);  
+                setTimeout(resolve,5000);  
             })
             continue;
         }
-
-        
-
-        console.log("GOT JOB FROM REDIS!");
 
         const parsedResponse = JSON.parse(response);
         const code = parsedResponse.code;
@@ -34,18 +31,74 @@ client.connect()
 
         if(language === "cpp"){
             console.log("running user's c++ code");
-            const filepath = __dirname + "/code/userscode.cpp";
+            const filepath = path.join( __dirname, "/code/userscode.cpp");
             fs.writeFileSync(filepath,code);
-            spawn("g++", [filepath, "-o", "./code/output"]);
-            await  new Promise<void>(resolve => setTimeout(() => {
-                resolve();    
-            }, 5000));
+            const compiler = spawn("g++", [filepath, "-o", "./code/output"]);
+            let compileError = "";
+
+    compiler.stderr.on("data", (chunk) => {
+        compileError += chunk.toString();
+    });
+
+    const compilationSuccessful = await new Promise<boolean>((resolve:any) => {
+        compiler.on("close",async(exitCode) => {
+
+            if (exitCode !== 0) {
+                await User.findByIdAndUpdate(
+                    _id,
+                    {Result : "compilation failed", compileError},
+                    
+                )
+                resolve(false);
+                return;
+            }
+
+            resolve(true);
+        });
+    });
+
+    if (!compilationSuccessful) {
+    continue;
+}
+
+
             const response = spawn("./code/output");
+            let stdoutData = '';
+            let stderrData = '';
             response.stdout.on("data",(chunk) => {
-                console.log(chunk.toString());
+                stdoutData += chunk.toString();      
             })
 
-            
+            response.stderr.on("data", (chunk)=> {
+                  stderrData += chunk.toString();
+            })
+
+            await new Promise<void>(resolve => {
+                response.on("close", () => {
+                    resolve();
+                })
+            })
+
+            let parinam = '';
+              if(stdoutData !== ''){
+                parinam = stdoutData;
+              }
+
+              else{
+                parinam = stderrData;
+              }
+
+            await User.findByIdAndUpdate(
+                _id,
+                {Result : parinam},
+                
+            );
+
+            await User.findByIdAndUpdate(
+                _id,
+                {status : codestatus.completed},
+                
+            )    
         }
 
         if(language === "javascript"){
@@ -86,16 +139,14 @@ client.connect()
             await User.findByIdAndUpdate(
                 _id,
                 {Result : parinam},
-                {new : true}
+                
             );
 
             await User.findByIdAndUpdate(
                 _id,
                 {status : codestatus.completed},
-                {new : true}
+               
             )
-
-
         }
 
         if(language === "python3"){
@@ -131,20 +182,19 @@ client.connect()
             await User.findByIdAndUpdate(
                 _id,
                 {Result : parinam},
-                {new : true}
+                
             );
 
             await User.findByIdAndUpdate(
                 _id,
                 {status : codestatus.completed},
-                {new : true}
+                
             )
-
         }
-
-
     }
 
 })
 
+}
 
+)
