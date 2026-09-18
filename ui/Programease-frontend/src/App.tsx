@@ -1,17 +1,13 @@
 import {Appbar} from "./parts/appbar";
-import {Playground} from "./parts/playground";
+import {Playground} from "@/parts/playground";
+import Optionprovider from "@/contexts/provider";
 function App() {
 
   return (
-    <>
-    <div>
-      <Appbar/>
-    </div>
-    <div>
-      <Playground/>
-    </div>
-    
-    </>
+    <Optionprovider>
+      <Appbar />
+      <Playground />
+    </Optionprovider>
   )
 }
 export default App

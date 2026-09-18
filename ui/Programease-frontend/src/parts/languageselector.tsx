@@ -1,28 +1,35 @@
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
-  SelectLabel,
-  SelectScrollDownButton,
-  SelectScrollUpButton,
-  SelectSeparator,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
 
+import {LanguageContext} from "@/contexts/languageselector";
+
+import {useContext} from "react";
+
 export function Languageselector(){
-     return (
-    <Select>
+ const {language, setlanguage} = useContext(LanguageContext);
+     return ( 
+         <div>
+        <Select
+      value={language}
+      onValueChange={setlanguage}
+      >
       <SelectTrigger className="w-[120px]">
-        <SelectValue  style={{paddingLeft:9, fontSize:16}}placeholder="Language" />
+        <SelectValue  style={{paddingLeft:9, fontSize:16}} placeholder="Language" />
       </SelectTrigger>
 
       <SelectContent>
-        <SelectItem value="cpp" style={{fontSize:15, fontFamily:'Roboto Condensed', paddingLeft:13}}>C++</SelectItem>
-        <SelectItem value="javascript" style={{fontSize:15, fontFamily:'Roboto Condensed', paddingLeft:13}}>JavaScript</SelectItem>
-        <SelectItem value="python" style={{fontSize:15, fontFamily:'Roboto Condensed', paddingLeft:13}}>Python</SelectItem>
+        <SelectItem  value="C++" style={{fontSize:15, fontFamily:'Roboto Condensed', paddingLeft:13}}>C++</SelectItem>
+        <SelectItem  value="JavaScript" style={{fontSize:15, fontFamily:'Roboto Condensed', paddingLeft:13}}>JavaScript</SelectItem>
+        <SelectItem  value="Python" style={{fontSize:15, fontFamily:'Roboto Condensed', paddingLeft:13}}>Python</SelectItem>
       </SelectContent>
     </Select>
+  
+      </div>
+        
   );
 }
