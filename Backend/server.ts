@@ -41,6 +41,17 @@ app.post("/submission", async(req,res) => {
 
 })
 
+app.get("/status/:id", async(req,res)=> {
+    const id = req.params.id;
+    const submission = await User.findById(id);
+    res.json({
+        status:submission?.status,
+        result:submission?.Result
+    });
+
+
+})
+
 app.listen(3000,()=>{
     console.log("server started listening at 3000");
 });
