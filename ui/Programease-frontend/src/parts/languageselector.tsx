@@ -23,9 +23,9 @@ export function Languageselector(){
       </SelectTrigger>
 
       <SelectContent>
-        <SelectItem  value="C++" style={{fontSize:15, fontFamily:'Roboto Condensed', paddingLeft:13}}>C++</SelectItem>
-        <SelectItem  value="JavaScript" style={{fontSize:15, fontFamily:'Roboto Condensed', paddingLeft:13}}>JavaScript</SelectItem>
-        <SelectItem  value="Python" style={{fontSize:15, fontFamily:'Roboto Condensed', paddingLeft:13}}>Python</SelectItem>
+        <SelectItem  value="cpp" style={{fontSize:15, fontFamily:'Roboto Condensed', paddingLeft:13}}>C++</SelectItem>
+        <SelectItem  value="javaScript" style={{fontSize:15, fontFamily:'Roboto Condensed', paddingLeft:13}}>JavaScript</SelectItem>
+        <SelectItem  value="python3" style={{fontSize:15, fontFamily:'Roboto Condensed', paddingLeft:13}}>Python</SelectItem>
       </SelectContent>
     </Select>
   

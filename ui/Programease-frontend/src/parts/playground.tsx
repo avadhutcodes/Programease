@@ -3,14 +3,12 @@ import { Output } from "./output";
 import {useContext} from "react";
 import {LanguageContext} from "@/contexts/languageselector";
 import {Codecontext} from "@/contexts/Codeccontextprovider";
-import {useState, useEffect} from "react";
-
+import {Resultcontext} from "@/contexts/Resultprovider";
 export function Playground() {
   const {language} = useContext(LanguageContext);
-  console.log(language);
-
   const {code, setcode} = useContext(Codecontext);
- 
+  const {Result} = useContext(Resultcontext);
+  
   /*
   1. Send request to backend with code and language.
   2. get language option from language selector component via context api.
@@ -38,7 +36,7 @@ export function Playground() {
         <Editor
           height="100%"
           width="100%"
-          language="javascript"
+          language= {language!}
           theme="vs-dark"
           value={code}
           onChange={(value) => {
@@ -46,7 +44,16 @@ export function Playground() {
           }}
         />
       </div>
+      
+      <div
+       style={{
+          width: "100%",
+          height: "45%",
+        }}
+      >
+        <Output result={Result}/>
 
+      </div>
       
      
     </div>

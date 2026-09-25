@@ -2,6 +2,7 @@ import {Appbar} from "./parts/appbar";
 import {Playground} from "@/parts/playground";
 import Optionprovider from "@/contexts/provider";
 import Codeprovider from "@/contexts/Codeprovider";
+import Resultprovider from "@/contexts/Resultprovidercomponent";
 import {
   useQuery,
   useMutation,
@@ -13,7 +14,8 @@ function App() {
   const queryClient = new QueryClient()
 
   return (
-    <Codeprovider>
+    <Resultprovider>
+      <Codeprovider>
        <QueryClientProvider client={queryClient}>
     <Optionprovider>
       <Appbar />
@@ -21,6 +23,8 @@ function App() {
     </Optionprovider>
     </QueryClientProvider>
     </Codeprovider>
+    </Resultprovider>
+    
     
   )
 }

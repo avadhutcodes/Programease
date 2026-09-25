@@ -6,7 +6,7 @@ export type SubmissionData = {
 }
 
 export async function PostCode({code, language}: SubmissionData){
-   const response =  await axios.post("localhost:3000/submission", {
+   const response =  await axios.post("http://localhost:3000/submission", {
         code:code,
         language:language
     })
