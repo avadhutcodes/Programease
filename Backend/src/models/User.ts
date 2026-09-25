@@ -7,7 +7,7 @@ import mongoose, {Schema, Document} from "mongoose";
 
 enum languageoptions {
     cpp = "cpp",
-    javascript = "javascript",
+    javascript = "javaScript",
     python = "python3"
 }
 
